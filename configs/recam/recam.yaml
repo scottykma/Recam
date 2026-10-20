@@ -1,0 +1,126 @@
+exp_id: recam
+
+num_steps: 10000
+
+dataloader:
+  seed: 47
+  batch_size: 1
+  shuffle: true
+  drop_last: true
+  infinite: true
+  num_workers: 4
+  pin_memory: true
+  prefetch_factor: 1
+
+data_manager:
+  pre_encode_batches: 1
+  pre_encode_log_every: 2
+
+ema:
+  enabled: true
+  decay: 0.999
+  start_step: 0
+  update_freq: 1
+
+model:
+  transformer:
+    in_dim: 36
+
+optimizer:
+  learning_rate: 1.0e-5
+  weight_decay: 0.0001
+  beta1: 0.9
+  beta2: 0.999
+  clip_grad: true
+  max_grad_norm: 1.0
+  skip_outlier_grad: true
+  skip_outlier_grad_factor: 3.0
+  skip_outlier_grad_ema_alpha: 0.99
+  skip_outlier_grad_observe_steps: 200
+  skip_outlier_grad_reset_steps: 3
+  fresh_params:
+    lr: 1.0e-04
+    weight_decay: 0.0
+  gradient_accumulation_steps: 1
+  gradient_checkpoint_modules: [DiTBlock, Head]
+
+lora:
+  enabled: false
+
+lr_scheduler:
+  max_steps: 10000
+  warmup_steps: 500
+  decay_steps: 0
+  min_lr_factor: 0.1
+  decay_type: cosine
+
+parallel:
+  hsdp: true
+  shard_size: 8
+  zero3: true
+  reshard_after_forward: true
+  wrap_submodules: [blocks]
+  use_amp: true
+  param_dtype: bfloat16
+  reduce_dtype: float32
+  cp_size: 1
+
+logging:
+  log_interval: 1
+  use_tensorboard: true
+
+checkpoint:
+  pretrained_path: ""
+  resume_from: ""
+  init_on_meta_device: true
+  save_latest_interval: 100
+  save_checkpoint_interval: 2000
+  force_overwrite_optimizer: true
+
+eval:
+  online_eval: false
+
+misc:
+  runs_dir: runs
+  seed: 1234
+  torch_compile: false
+  eval_only: false
+
+geometry:
+  target_fps: 16.0
+  height: 448
+  width: 832
+  num_frames: 41
+  overlap: 2
+  history_pack_shape: [2, 8, 8]
+  history_pad_shape: [2, 56, 104]
+
+strategy:
+  flow_num_train_timesteps: 1000
+  flow_shift: 2.0
+  flow_snr_type: lognorm
+  flow_min_timestep: 0.0
+  flow_max_timestep: null
+  dropout_cond_prob: 0.1
+  main_lognorm_mu: 0.0
+  context_noise_mixture_probs:
+    normal: 0.90
+    same_noise: 0.05
+    high_high: 0.05
+  high_noise_timestep_range: [0.95, 1.00]
+
+data:
+  parquet_path_list: []
+  task_probs: [0.0, 0.10, 0.90]
+  n_chunks: 13
+  max_decode_attempts: 8
+  online_frame_check:
+    enabled: true
+    colorfulness_th: 0.2
+    max_resample: 10
+
+camera:
+  focal_x: 0.5050505050505051
+  translation_transform: linear
+
+cfg_scale: 3.5
