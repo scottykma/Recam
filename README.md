@@ -1,5 +1,7 @@
 # ReCam
 
+[![arXiv](https://img.shields.io/badge/arXiv-2610.27986-b31b1b.svg?logo=arxiv&logoColor=white)](https://arxiv.org/abs/2610.27986)
+
 **Recast the Past: Stable Long Video Generation with Full Context Memory**
 
 ![ReCam teaser: keyframe-based retrieval, compression-based memory, and ReCam full-context memory](assets/teaser.png)
